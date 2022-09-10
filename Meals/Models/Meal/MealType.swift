@@ -7,8 +7,6 @@
 
 import Foundation
 
-import Foundation
-
 enum MealType: String {
     case dessert = "Dessert"
     case lamb = "Lamb"

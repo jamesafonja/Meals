@@ -31,7 +31,7 @@ class MealListViewController: UIViewController {
 // MARK: - Network functions
 extension MealListViewController {
     func getMeals() {
-        vm.getMeals() { [weak self] success in
+        vm.getMeals(ofType: .dessert) { [weak self] success in
             if success {
                 DispatchQueue.main.async {
                     self?.mealsTableView.reloadData()

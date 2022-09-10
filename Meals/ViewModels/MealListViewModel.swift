@@ -9,8 +9,8 @@ import Foundation
 import SDWebImage
 
 class MealListViewModel {
-    private let baseMealsUrl = "https://www.themealdb.com/api/json/v1/1/filter.php?c="
-    var mealType: MealType? = .beef
+    let baseMealsUrl = "https://www.themealdb.com/api/json/v1/1/filter.php?c="
+    var mealType: MealType? = .dessert
     
     var meals = [Meal]() {
         didSet {
@@ -23,7 +23,7 @@ class MealListViewModel {
     /// Can be used for debugging or as a message in an alert
     var statusMessage: String = ""
     
-    func getMeals(completion: @escaping (_ success: Bool) -> Void) {
+    func getMeals(ofType: MealType, completion: @escaping (_ success: Bool) -> Void) {
         guard let mealType = mealType else {
             return
         }
