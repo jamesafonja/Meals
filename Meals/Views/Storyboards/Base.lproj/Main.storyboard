@@ -135,11 +135,28 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="Nyi-zu-wRE"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="PvR-uE-z0A"/>
                             </scrollView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fcb-ue-4tc" userLabel="LoadingView">
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="rLx-41-IZs">
+                                        <rect key="frame" x="188.5" y="368.5" width="37" height="37"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="rLx-41-IZs" firstAttribute="centerX" secondItem="fcb-ue-4tc" secondAttribute="centerX" id="YYt-9P-KGK"/>
+                                    <constraint firstItem="rLx-41-IZs" firstAttribute="centerY" secondItem="fcb-ue-4tc" secondAttribute="centerY" id="ukE-ce-1ui"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="LQU-Nz-Irs"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="AQ6-gM-Jv9" firstAttribute="top" secondItem="7G2-bc-9zM" secondAttribute="top" constant="88" id="7Y6-AR-0E1"/>
+                            <constraint firstItem="LQU-Nz-Irs" firstAttribute="bottom" secondItem="fcb-ue-4tc" secondAttribute="bottom" id="CX9-YL-9WG"/>
+                            <constraint firstItem="fcb-ue-4tc" firstAttribute="top" secondItem="LQU-Nz-Irs" secondAttribute="top" id="Gxr-1U-JID"/>
+                            <constraint firstItem="fcb-ue-4tc" firstAttribute="leading" secondItem="LQU-Nz-Irs" secondAttribute="leading" id="Hyc-c7-rDY"/>
+                            <constraint firstItem="LQU-Nz-Irs" firstAttribute="trailing" secondItem="fcb-ue-4tc" secondAttribute="trailing" id="L76-B4-rO9"/>
                             <constraint firstItem="tJy-nJ-voX" firstAttribute="width" secondItem="7G2-bc-9zM" secondAttribute="width" id="RTG-OS-0c3"/>
                             <constraint firstItem="W2A-TD-mr1" firstAttribute="height" secondItem="7G2-bc-9zM" secondAttribute="width" multiplier="0.713" id="UBb-Zd-QgL"/>
                             <constraint firstAttribute="bottom" secondItem="AQ6-gM-Jv9" secondAttribute="bottom" id="VgX-X5-STA"/>
@@ -149,8 +166,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="v2z-hC-u5a"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="rLx-41-IZs" id="o1d-ZI-olp"/>
                         <outlet property="ingredientsLabel" destination="3Oo-Gi-pb1" id="Wpw-GE-Ltc"/>
                         <outlet property="instructionsLabel" destination="QDx-DS-fsH" id="WGe-m9-wu7"/>
+                        <outlet property="loadingView" destination="fcb-ue-4tc" id="cu9-Nb-MaI"/>
                         <outlet property="mealImageView" destination="W2A-TD-mr1" id="IXT-x8-Mxr"/>
                         <outlet property="mealNameLabel" destination="WaF-4e-Igf" id="ziS-Ge-dEJ"/>
                     </connections>

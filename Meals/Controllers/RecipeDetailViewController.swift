@@ -9,11 +9,17 @@ import UIKit
 
 // MARK: - RecipeDetailViewController
 class RecipeDetailViewController: UIViewController {
+    // IBOutlets
     @IBOutlet weak var mealImageView: UIImageView!
     @IBOutlet weak var mealNameLabel: UILabel!
     @IBOutlet weak var ingredientsLabel: UILabel!
     @IBOutlet weak var instructionsLabel: UILabel!
     
+    // Loading View
+    @IBOutlet weak var loadingView: UIView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+    // View Model
     var vm: RecipeDetailViewModel?
     
     override func viewDidLoad() {
@@ -72,11 +78,15 @@ extension RecipeDetailViewController {
     }
     
     private func showLoadingView() {
-        // Configure and present loading view
+        loadingView.isHidden = false
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
     }
     
     private func hideLoadingView() {
-        // Remove loading view
+        loadingView.isHidden = true
+        activityIndicator.stopAnimating()
+        activityIndicator.isHidden = true
     }
     
 }
