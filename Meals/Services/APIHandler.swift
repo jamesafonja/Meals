@@ -29,13 +29,11 @@ class APIHandler {
             
             if let error = error {
                 completion(nil, "APIHandler, Error: \(error)")
-                print("ERROR: \(error)")
                 return
             }
             
             guard let data = data else {
                 completion(nil, "APIHandler: No data")
-                print("APIHANDLER: NO DATA")
                 return
             }
             

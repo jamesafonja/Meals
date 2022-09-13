@@ -8,13 +8,19 @@
 import XCTest
 @testable import Meals
 
+/*
+ Asynchronous tests use expectations per Apple docs:-
+ https://developer.apple.com/documentation/xctest/asynchronous_tests_and_expectations
+ */
+
 class RecipeDetailViewModelTests: XCTestCase {
     var vm: RecipeDetailViewModel?
     var selectedMealId: String?
+    var expectation: XCTestExpectation?
 
     override func setUpWithError() throws {
         vm = RecipeDetailViewModel()
-        selectedMealId = "52961"
+        vm?.selectedMealId = "52961"
     }
 
     override func tearDownWithError() throws {
@@ -41,42 +47,45 @@ class RecipeDetailViewModelTests: XCTestCase {
     }
     
     func test_recipeDetailViewModel_getRecipe_works() {
-        guard let vm = vm else { return }
-                
-        vm.selectedMealId = selectedMealId
         
-        vm.getRecipe { success in
-            XCTAssertTrue(success)
+        expectation = XCTestExpectation(description: #function)
+
+        guard let vm = vm else { return }
+
+        vm.getRecipe { [weak self] success in
+            if success {
+                XCTAssertTrue(success)
+                self?.expectation?.fulfill()
+            } else {
+                XCTFail("Expected meals but failed.")
+            }
         }
+
+        wait(for: [expectation ?? XCTestExpectation()], timeout: 5.0)
     }
     
-    func test_recipeDetailViewModel_statusMessage_isNotEmptyAfterRunning() {
-        guard let vm = vm else { return }
-        
-        vm.selectedMealId = selectedMealId
-        
-        vm.getRecipe { [weak self] success in
-            guard let message = self?.vm?.statusMessage else { return }
-            
-            XCTAssertNotNil(message)
-            XCTAssertFalse(message.isEmpty)
-        }
-    }
     
     func test_recipeDetailViewModel_recipe_isNil_OnInit() {
         guard let vm = vm else { return }
-        
         XCTAssertNil(vm.recipe)
     }
     
     func test_recipeDetailViewModel_recipe_isNotEmpty_ifSuccess() {
+        
+        expectation = XCTestExpectation(description: #function)
+        
         guard let vm = vm else { return }
-
-        vm.selectedMealId = selectedMealId
         
         vm.getRecipe { [weak self] success in
-            XCTAssertNotNil(self?.vm?.recipe)
+            if success {
+                XCTAssertTrue(success)
+                self?.expectation?.fulfill()
+            } else {
+                XCTFail("Expected recipe but failed")
+            }
         }
+        
+        wait(for: [expectation ?? XCTestExpectation()], timeout: 3)
     }
 
 }

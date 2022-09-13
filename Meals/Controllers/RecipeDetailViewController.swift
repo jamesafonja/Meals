@@ -28,27 +28,21 @@ class RecipeDetailViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = false
         
         showLoadingView()
-        getRecipe()
-    }
-        
-}
 
-// MARK: Networking functions
-extension RecipeDetailViewController {
-    private func getRecipe() {
-        vm?.getRecipe(completion: { [weak self] success in
-            DispatchQueue.main.async {
-                self?.hideLoadingView()
-                
-                if success {
+        vm?.getRecipe { [weak self] success in
+            if success {
+                DispatchQueue.main.async {
                     self?.configureViews()
-                } else {
-                    self?.showAlert(title: "Oh oh", message: self?.vm?.statusMessage)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self?.hideLoadingView()
+                    self?.showAlert(title: "Error", message: self?.vm?.statusMessage)
                 }
             }
-        })
+        }
     }
-
+        
 }
 
 // MARK: View functions
@@ -59,12 +53,10 @@ extension RecipeDetailViewController {
             let vm = vm,
             let recipe = vm.recipe
         else {
-            print("VM IN RECIPE DETAIL IS NIL")
             return
         }
         
-        print("VM EXISTS IN RECIPE DETAIL VC")
-
+        // Set meal thumbnail image
         if
             let urlString = recipe.strMealThumb,
             let url = URL(string: urlString)
@@ -72,9 +64,13 @@ extension RecipeDetailViewController {
             mealImageView.sd_setImage(with: url, placeholderImage: nil)
         }
 
+        // Set text for labels
         mealNameLabel.text = recipe.strMeal
         ingredientsLabel.text = recipe.ingredients.joined(separator: "\n")
         instructionsLabel.text = recipe.strInstructions
+        
+        // Hide the loading view
+        hideLoadingView()
     }
     
     private func showLoadingView() {

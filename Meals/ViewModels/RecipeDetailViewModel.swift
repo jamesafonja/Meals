@@ -14,15 +14,16 @@ class RecipeDetailViewModel {
     var recipe: Recipe?
 
     func getRecipe(completion: @escaping ((_ success: Bool) -> Void)) {
-        guard
-            let mealID = selectedMealId
-        else { return }
+        
+        guard let mealID = selectedMealId else {
+            return
+        }
         
         let urlString = baseRecipeUrl + mealID
 
         APIHandler.shared.getData(from: urlString) { [weak self] data, statusMessage in
             guard let data = data else {
-                self?.statusMessage = "RecipeDetailViewModel: No data"
+                self?.statusMessage = "No recipe data found"
                 completion(false)
                 return
             }
@@ -30,10 +31,10 @@ class RecipeDetailViewModel {
             do {
                 let recipeResponse = try JSONDecoder().decode(RecipeResponse.self, from: data)
                 self?.recipe = Recipe(data: recipeResponse.meals)
-                self?.statusMessage = "RecipeDetailViewModel: Retrieved recipe successfully"
+                self?.statusMessage = "Recipe successfully"
                 completion(true)
             } catch let decoderError {
-                self?.statusMessage = "RecipeDetailViewModel: Error decoding recipe from data. \(decoderError)"
+                self?.statusMessage = "Error decoding recipe from data. \(decoderError)"
             }
         }
     }

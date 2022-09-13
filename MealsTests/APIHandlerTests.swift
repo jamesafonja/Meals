@@ -8,8 +8,14 @@
 import XCTest
 @testable import Meals
 
+/*
+ Asynchronous tests use expectations per Apple docs:-
+ https://developer.apple.com/documentation/xctest/asynchronous_tests_and_expectations
+ */
+
 class APIHandlerTests: XCTestCase {
     var handler: APIHandler?
+    var expectation: XCTestExpectation?
     
     override func setUpWithError() throws {
         handler = APIHandler.shared
@@ -17,46 +23,44 @@ class APIHandlerTests: XCTestCase {
 
     override func tearDownWithError() throws {
         handler = nil
+        expectation = nil
     }
 
     func test_APIHandler_isNotNil() {
         XCTAssertNotNil(handler)
     }
     
-    func test_APIHandler_doesNotWork_WithOnlyBaseMealUrl() {
-        let baseMealsUrl = "https://www.themealdb.com/api/json/v1/1/filter.php?c="
+    func test_APIHandler_fails_whenGivenBadUrlString() {
+        expectation = XCTestExpectation(description: #function)
 
-        handler?.getData(from: baseMealsUrl, completion: { data, statusMessage in
+        let badUrlString = "htp://badUrlString"
+
+        handler?.getData(from: badUrlString, completion: { [weak self] data, statusMessage in
             XCTAssertNil(data)
-            XCTAssertEqual(statusMessage, "APIHandler: No data")
+            self?.expectation?.fulfill()
         })
-    }
-    
-    func test_APIHandler_doesNotWorkWithBaseRecipeUrl() {
-        let baseRecipeURl = RecipeDetailViewModel().baseRecipeUrl
         
-        handler?.getData(from: baseRecipeURl, completion: { data, statusMessage in
-            XCTAssertNil(data)
-            XCTAssertEqual(statusMessage, "APIHandler: No data")
-        })
-    }
-    
-    func test_APIHandler_doesNotWorkWithBadUrl() {
-        let badUrl = "htp://xyz"
+        wait(for: [expectation ?? XCTestExpectation()], timeout: 3.0)
         
-        handler?.getData(from: badUrl, completion: { data, statusMessage in
-            XCTAssertNil(data)
-            XCTAssertEqual(statusMessage, "APIHandler: Invalid URL")
-        })
     }
     
     func test_APIHandler_worksWithGoodUrl() {
-        let goodUrl = "https://www.themealdb.com/api/json/v1/1/lookup.php?i=52961"
+        expectation = XCTestExpectation(description: #function)
         
-        handler?.getData(from: goodUrl, completion: { data, statusMessage in
-            XCTAssertNotNil(data)
-            XCTAssertEqual(statusMessage, "Data retrieved successfully")
+        let goodUrl = "https://www.themealdb.com/api/json/v1/1/lookup.php?i=52961"
+        var msg = ""
+        var fetchedData: Data?
+        
+        handler?.getData(from: goodUrl, completion: { [weak self] data, statusMessage in
+            msg = statusMessage
+            fetchedData = data
+            self?.expectation?.fulfill()
         })
+        
+        wait(for: [expectation ?? XCTestExpectation()], timeout: 3.0)
+        
+        XCTAssertNotNil(fetchedData)
+        XCTAssertEqual(msg, "Data retrieved successfully")
     }
 
 }
